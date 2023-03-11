@@ -1,0 +1,9 @@
+panel-name: Sabakan Manager
+docker-path: docker
+server:
+  base-path: ./servers/smain
+  type: docker
+  host: localhost
+  port: 25565
+  rcon-password: sSzx7PTgH2K2T4Sb
+login: "admin:kp63"
