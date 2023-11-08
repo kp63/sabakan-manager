@@ -19,7 +19,7 @@
 .DS_Store
 *.pem
 /servers/
-/config.ts
+/config.yml
 
 # debug
 npm-debug.log*
