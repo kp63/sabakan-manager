@@ -5,7 +5,6 @@ const useConfig = () => {
   const { data, error, ...etc } = useSWR<ServerPingResponse>('/api/get-config');
 
   return {
-    isLoading: !data && !error,
     isLoaded: data && !error,
     config: data,
     error,

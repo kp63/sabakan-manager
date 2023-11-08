@@ -3,9 +3,9 @@ export const dockerInspectHealthStatuses = ["starting", "healthy", "unhealthy"] 
 export type DockerInspectStateStatuses = typeof dockerInspectStateStatuses[number];
 export type DockerInspectHealthStatuses = typeof dockerInspectHealthStatuses[number];
 export const isDockerInspectStateStatuses = (payload: unknown): payload is DockerInspectStateStatuses =>
-  typeof payload === "string" && (dockerInspectStateStatuses as any as string[]).includes(payload);
+  typeof payload === "string" && (dockerInspectStateStatuses as any as string[])?.includes(payload);
 export const isDockerInspectHealthStatuses = (payload: unknown): payload is DockerInspectHealthStatuses =>
-  typeof payload === "string" && (dockerInspectHealthStatuses as any as string[]).includes(payload);
+  typeof payload === "string" && (dockerInspectHealthStatuses as any as string[])?.includes(payload);
 
 export const dockerInspectStateStatusColors: { [key in DockerInspectStateStatuses]: string } = {
   created: "#0db7ed",

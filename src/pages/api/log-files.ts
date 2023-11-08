@@ -4,8 +4,9 @@ import { authOptions } from "./auth/[...nextauth]"
 
 import fs from 'fs'
 import path from 'path'
+import { config } from "@/utils/serverside";
 
-const baseDir = path.join(path.resolve(), 'servers/main');
+const baseDir = path.resolve(config.server.basePath);
 const dataDir = path.join(baseDir, 'data');
 const logsDir = path.join(dataDir, 'logs')
 

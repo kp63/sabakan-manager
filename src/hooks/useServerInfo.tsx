@@ -6,7 +6,6 @@ const useServerInfo = () => {
   const { data, error, ...etc } = useSWR<ServerInfoResponse, ServerInfoErrorResponse>('/api/info', fetcher);
 
   return {
-    isLoading: !data && !error,
     isLoaded: data && !error,
     data,
     error,

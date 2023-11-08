@@ -89,6 +89,7 @@ const options: QueryOptions = {
  */
 export const isServerOnline = async () => {
   try {
+    // const res = await fetch(`https://api.mcstatus.io/v2/status/java/${config.server.host}:${config.server.port}`)
     await status(config.server.host, config.server.port, options);
     return true;
   } catch (e) {
@@ -113,8 +114,9 @@ export const parseYamlFile = (filePath: string) => {
 
   const parsed = yaml.load(file);
   if (!parsed) return null;
+  if (typeof parsed !== "object") return null;
 
-  return camelcaseKeys(parsed);
+  return camelcaseKeys(parsed as Record<string, unknown>);
 }
 
 export const parseJsonFile = (filePath: string) => {
@@ -132,8 +134,12 @@ export const parseJsonFile = (filePath: string) => {
 }
 
 export const getServerProperties = (serverDir: string) => {
-  const parsed: any = parseIniFile(`${serverDir}/server.properties`);
-  delete parsed.rconPassword;
+  const parsed = parseIniFile(`${serverDir}/server.properties`) as any;
+  if (typeof parsed === "object") {
+    if (parsed?.hasOwnProperty("rconPassword")) {
+      delete parsed?.rconPassword;
+    }
+  }
   return isServerPropertiesPartial(parsed) ? parsed : null;
 }
 

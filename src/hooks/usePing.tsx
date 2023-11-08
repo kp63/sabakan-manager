@@ -8,7 +8,6 @@ const usePing = () => {
   });
 
   return {
-    isLoading: !data && !error,
     isLoaded: data && !error,
     data,
     error,

@@ -5,8 +5,8 @@ type SafeNumber = number | `${number}`;
 
 export const isServerPropertiesPartial = (payload: any): payload is Partial<ServerProperties> =>
   typeof payload === "object"
-  && typeof payload.motd === "string"
-  && (typeof payload.gamemode === "string" || typeof payload.gamemode === "number")
+  && typeof payload?.motd === "string"
+  && (typeof payload?.gamemode === "string" || typeof payload?.gamemode === "number")
 
 export default interface ServerProperties {
   allowFlight: boolean;

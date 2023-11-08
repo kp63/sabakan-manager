@@ -1,7 +1,7 @@
 export const isServerSpigotConfig = (payload: any): payload is ServerSpigotConfig =>
   typeof payload === "object"
-  && typeof payload.settings === "object"
-  && typeof payload.settings.shutdownMessage === "string"
+  && typeof payload?.settings === "object"
+  && typeof payload?.settings?.shutdownMessage === "string"
 
 export default interface ServerSpigotConfig {
   settings: {

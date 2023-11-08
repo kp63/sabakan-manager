@@ -6,7 +6,7 @@ import path from "path";
 import { NodeSignals } from "@/types/Node";
 import { config, isServerOnline } from "@/utils/serverside";
 
-const baseDir = path.join(path.resolve(), 'servers/main');
+const baseDir = path.resolve(config.server.basePath);
 const dataDir = path.join(baseDir, 'data');
 
 export type SendCommandProps = {

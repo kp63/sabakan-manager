@@ -14,6 +14,7 @@ import {
   getServerBukkitConfig,
   getServerProperties,
   parseIniFile,
+  config,
   parseJsonFile,
   parseYamlFile
 } from "@/utils/serverside";
@@ -35,24 +36,25 @@ export type ServerInfoErrorResponse = {
   message: 'Server not found.'
 }
 
-const basePath = _path.join(_path.resolve(), 'servers/main/data');
+const baseDir = _path.resolve(config.server.basePath);
+const dataDir = _path.join(baseDir, 'data');
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<ServerInfoResponse | ServerInfoErrorResponse>) => {
-  if (!fs.existsSync(`${basePath}/server.properties`)) {
+  if (!fs.existsSync(`${dataDir}/server.properties`)) {
     res.status(404).json({
       message: 'Server not found.',
     })
   }
 
-  const properties = getServerProperties(basePath);
+  const properties = getServerProperties(dataDir);
 
-  const ops = parseJsonFile(`${basePath}/ops.json`);
-  const bannedPlayers = parseJsonFile(`${basePath}/banned-players.json`);
-  const bannedIps = parseJsonFile(`${basePath}/banned-ips.json`);
-  const whitelist = parseJsonFile(`${basePath}/whitelist.json`);
+  const ops = parseJsonFile(`${dataDir}/ops.json`);
+  const bannedPlayers = parseJsonFile(`${dataDir}/banned-players.json`);
+  const bannedIps = parseJsonFile(`${dataDir}/banned-ips.json`);
+  const whitelist = parseJsonFile(`${dataDir}/whitelist.json`);
 
-  const bukkit = getServerBukkitConfig(basePath);
-  const spigot = parseYamlFile(`${basePath}/spigot.yml`);
+  const bukkit = getServerBukkitConfig(dataDir);
+  const spigot = parseYamlFile(`${dataDir}/spigot.yml`);
 
   res.status(200).json({
     properties,

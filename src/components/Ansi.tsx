@@ -134,7 +134,7 @@ function convertBundleIntoReact(
 
     // Make sure the href we generate from the link is fully qualified. We assume http
     // if it starts with a www because many sites don't support https
-    const href = url.startsWith("www.") ? `http://${url}` : url;
+    const href = url.startsWith("www.") ? `https://${url}` : url;
     content.push(
       React.createElement(
         "a",

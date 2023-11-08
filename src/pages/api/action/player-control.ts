@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/pages/api/auth/[...nextauth]"
-import { spawnSync } from "child_process";
 import path from "path";
 import { SpawnSyncReturns } from "@/types/Node";
 import {
@@ -17,7 +16,7 @@ import { ConfigPlayer, Player } from "@/types/Player";
 import { dashUuid, undashUuid } from "@/utils/utils";
 import { format } from "date-fns"
 
-const baseDir = path.join(path.resolve(), 'servers/main');
+const baseDir = path.resolve(config.server.basePath);
 const dataDir = path.join(baseDir, 'data');
 
 const controls = [
@@ -27,6 +26,7 @@ const controls = [
   "ban", "pardon",
   "ban-ip", "pardon-ip"
 ] as const;
+
 export type PlayerControlType = typeof controls[number];
 export const isPlayerControlType = (payload: unknown): payload is PlayerControlType =>
   typeof payload === "string" && (controls as any as string[]).includes(payload);
@@ -90,7 +90,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   switch (control) {
     case "op":
     case "deop":
-      const opsPath = path.join(config.server.dataPath, 'ops.json');
+      const opsPath = path.join(dataDir, 'ops.json');
 
       try {
         const data = JSON.parse(fs.readFileSync(opsPath, "utf-8"));
@@ -138,7 +138,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       }
     case "ban":
     case "pardon":
-      const bannedPlayersPath = path.join(config.server.dataPath, 'banned-players.json');
+      const bannedPlayersPath = path.join(dataDir, 'banned-players.json');
 
       try {
         const data = JSON.parse(fs.readFileSync(bannedPlayersPath, "utf-8"));
@@ -201,7 +201,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       })
     case "whitelist add":
     case "whitelist remove":
-      const whitelistPath = path.join(config.server.dataPath, 'whitelist.json');
+      const whitelistPath = path.join(dataDir, 'whitelist.json');
 
       try {
         const data = JSON.parse(fs.readFileSync(whitelistPath, "utf-8"));

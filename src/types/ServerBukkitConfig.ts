@@ -2,8 +2,8 @@ import ServerProperties from "@/types/ServerProperties";
 
 export const isServerBukkitConfig = (payload: any): payload is ServerBukkitConfig =>
   typeof payload === "object"
-  && typeof payload.settings === "object"
-  && typeof payload.settings.shutdownMessage === "string"
+  && typeof payload?.settings === "object"
+  && typeof payload?.settings?.shutdownMessage === "string"
 
 export default interface ServerBukkitConfig {
   settings: {
