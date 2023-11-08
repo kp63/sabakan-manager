@@ -1,6 +1,5 @@
 import React, { ForwardedRef, forwardRef } from "react";
 import clsx from "clsx";
-import { Label } from "flowbite-react";
 
 type Props = React.InputHTMLAttributes<HTMLInputElement> & {
   label?: string;

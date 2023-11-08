@@ -1,6 +1,4 @@
 import React, { ForwardedRef, forwardRef } from "react";
-import clsx from "clsx";
-import { Label } from "flowbite-react";
 import { twMerge } from "tailwind-merge";
 
 type Props = React.InputHTMLAttributes<HTMLSelectElement> & {
