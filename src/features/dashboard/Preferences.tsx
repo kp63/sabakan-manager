@@ -109,8 +109,18 @@ const ShowSpigotConfig = () => {
 }
 
 const EditorModal = ({ filename, language, defaultValue }: { filename: string, language: HighlighterLanguage, defaultValue: string }) => {
-  const encrypted = encBase64.parse(defaultValue).toString(encLatin1);
-  const data = AES.decrypt(encrypted, key).toString(encUtf8);
+  const data = (() => {
+    if (!defaultValue) {
+      return null;
+    }
+  
+    const encrypted = encBase64.parse(defaultValue).toString(encLatin1);
+    return AES.decrypt(encrypted, key).toString(encUtf8);
+  })();
+
+  if (!data) {
+    return <React.Fragment />
+  }
 
   return (
     <Modal
