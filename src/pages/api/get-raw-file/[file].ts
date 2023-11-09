@@ -34,10 +34,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const filteredData = data.replace(/(rcon\.[a-zA-Z0-9]+|[a-zA-Z0-9]*password[a-zA-Z0-9]*)=.+/g, "$1=********");
 
-    res.setHeader("Content-Type", "text/plain");
     const encrypted = CryptoJS.AES.encrypt(filteredData, 'placebo-security').toString();
     const base64 = CryptoJS.enc.Base64.stringify(CryptoJS.enc.Latin1.parse(encrypted))
-    return res.send(base64);
+
+    res.json({
+      data: base64,
+    })
   } catch (e) {
     res.status(404).json({
       message: 'Specified file not found',

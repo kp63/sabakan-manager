@@ -6,7 +6,7 @@ import { EraserFill, FileEarmark, FileEarmarkCode, Gear, XCircle, XLg } from "re
 import Tooltip from "@/components/Tooltip";
 import Modal from "@/components/Modal";
 import useSWR from "swr";
-import { textFetcher } from "@/utils/fetcher";
+import fetcher, { textFetcher } from "@/utils/fetcher";
 import { Close } from "@radix-ui/react-dialog";
 import AES from 'crypto-js/aes';
 import encUtf8 from 'crypto-js/enc-utf8';
@@ -79,49 +79,54 @@ const ShowDockerComposeConfig = () => {
 }
 
 const ShowServerProperties = () => {
-  const { data, error } = useSWR<string>("/api/get-raw-file/server.properties", textFetcher);
+  const { data, error } = useSWR("/api/get-raw-file/server.properties", fetcher);
 
-  if (typeof data !== "string" || error) {
+  if (error || !data.data) {
     return <React.Fragment />
   }
 
-  return <EditorModal filename="サーバー構成ファイル (server.properties)" language="properties" defaultValue={data} />
+  const decrypted = decrypt(data.data);
+
+  if (!decrypted) {
+    return <React.Fragment />
+  }
+
+  return <EditorModal filename="サーバー構成ファイル (server.properties)" language="properties" defaultValue={decrypted} />
 }
 
 const ShowBukkitConfig = () => {
-  const { data, error } = useSWR<string>("/api/get-raw-file/bukkit.yml", textFetcher);
+  const { data, error } = useSWR("/api/get-raw-file/bukkit.yml", fetcher);
 
-  if (typeof data !== "string" || error) {
+  if (error || !data.data) {
     return <React.Fragment />
   }
 
-  return <EditorModal filename="Bukkit 構成ファイル (bukkit.yml)" language="yaml" defaultValue={data} />
+  const decrypted = decrypt(data.data);
+
+  if (!decrypted) {
+    return <React.Fragment />
+  }
+
+  return <EditorModal filename="Bukkit 構成ファイル (bukkit.yml)" language="yaml" defaultValue={decrypted} />
 }
 
 const ShowSpigotConfig = () => {
-  const { data, error } = useSWR<string>("/api/get-raw-file/spigot.yml", textFetcher);
+  const { data, error } = useSWR("/api/get-raw-file/spigot.yml", fetcher);
 
-  if (typeof data !== "string" || error) {
+  if (error || !data.data) {
     return <React.Fragment />
   }
 
-  return <EditorModal filename="Spigot 構成ファイル (spigot.yml)" language="yaml" defaultValue={data} />
+  const decrypted = decrypt(data.data);
+
+  if (!decrypted) {
+    return <React.Fragment />
+  }
+
+  return <EditorModal filename="Spigot 構成ファイル (spigot.yml)" language="yaml" defaultValue={decrypted} />
 }
 
 const EditorModal = ({ filename, language, defaultValue }: { filename: string, language: HighlighterLanguage, defaultValue: string }) => {
-  const data = (() => {
-    if (!defaultValue) {
-      return null;
-    }
-  
-    const encrypted = encBase64.parse(defaultValue).toString(encLatin1);
-    return AES.decrypt(encrypted, key).toString(encUtf8);
-  })();
-
-  if (!data) {
-    return <React.Fragment />
-  }
-
   return (
     <Modal
       title={`${filename}`}
@@ -134,10 +139,19 @@ const EditorModal = ({ filename, language, defaultValue }: { filename: string, l
           <span className="py-1 px-3.5">{filename}</span>
           <Close className="px-4 bg-red-500/10 text-red-400 hover:bg-red-500/40 dark:hover:bg-red-500/30"><XLg size={14} /></Close>
         </div>
-        <FileViewer className="h-[500px] rounded-none border-none" data={data} lang={language} />
+        <FileViewer className="h-[500px] rounded-none border-none" data={defaultValue} lang={language} />
       </div>
     </Modal>
   );
+}
+
+const decrypt = (data?: string | null): string | null => {
+  if (!data) {
+    return null;
+  }
+
+  const encrypted = encBase64.parse(data).toString(encLatin1);
+  return AES.decrypt(encrypted, key).toString(encUtf8);
 }
 
 export default Preferences;
