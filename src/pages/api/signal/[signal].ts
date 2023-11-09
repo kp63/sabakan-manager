@@ -2,11 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/pages/api/auth/[...nextauth]"
 import { spawnSync } from "child_process";
-import path from "path";
 import { config, getServerInspect } from "@/utils/serverside";
-
-const baseDir = path.join(path.resolve(), 'servers/main');
-const dataDir = path.join(baseDir, 'data');
 
 let isServerStarting = false;
 
@@ -54,7 +50,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<SignalResponse>
       }
 
       const result = spawnSync(config.dockerPath, ['compose', 'up', '-d'], {
-        cwd: baseDir,
+        cwd: config.server.basePath,
         encoding: 'utf-8'
       });
 
@@ -77,7 +73,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<SignalResponse>
       }
 
       const result = spawnSync(config.dockerPath, ['compose', 'stop'], {
-        cwd: baseDir,
+        cwd: config.server.basePath,
         encoding: 'utf-8'
       });
 
@@ -106,7 +102,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<SignalResponse>
       }
 
       const result = spawnSync(config.dockerPath, ['compose', 'restart'], {
-        cwd: baseDir,
+        cwd: config.server.basePath,
         encoding: 'utf-8'
       });
 

@@ -1,8 +1,8 @@
 import toast, { Renderable, ValueOrFunction } from "react-hot-toast";
 import post from "@/utils/post";
 import { mutate } from "swr";
-import { PlayerControlProps, PlayerControlReturn, PlayerControlType } from "@/pages/api/action/player-control";
-import { isPlayer, Player } from "@/types/Player";
+import { PlayerControlType } from "@/pages/api/action/player-control";
+import { Player } from "@/types/Player";
 import { SendCommandProps, SendCommandReturn } from "@/pages/api/action/send-command";
 import Ansi from "@/components/Ansi";
 

@@ -4,13 +4,14 @@ import useServerInfo from "@/hooks/useServerInfo";
 import BoxGroup from "@/components/BoxGroup";
 import { EraserFill, FileEarmark, FileEarmarkCode, Gear, XCircle, XLg } from "react-bootstrap-icons";
 import Tooltip from "@/components/Tooltip";
-import { useTheme } from "next-themes";
 import Modal from "@/components/Modal";
 import useSWR from "swr";
 import { textFetcher } from "@/utils/fetcher";
 import { Close } from "@radix-ui/react-dialog";
 import AES from 'crypto-js/aes';
 import encUtf8 from 'crypto-js/enc-utf8';
+import encLatin1 from 'crypto-js/enc-latin1';
+import encBase64 from 'crypto-js/enc-base64';
 import FileViewer, { HighlighterLanguage } from "@/components/FileViewer";
 
 const gamemodes = {
@@ -108,7 +109,8 @@ const ShowSpigotConfig = () => {
 }
 
 const EditorModal = ({ filename, language, defaultValue }: { filename: string, language: HighlighterLanguage, defaultValue: string }) => {
-  const data = AES.decrypt(defaultValue, key).toString(encUtf8);
+  const encrypted = encBase64.parse(defaultValue).toString(encLatin1);
+  const data = AES.decrypt(encrypted, key).toString(encUtf8);
 
   return (
     <Modal
