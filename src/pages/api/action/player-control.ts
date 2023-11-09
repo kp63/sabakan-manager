@@ -13,11 +13,8 @@ import {
 } from "@/utils/serverside";
 import fs from "fs";
 import { ConfigPlayer, Player } from "@/types/Player";
-import { dashUuid, undashUuid } from "@/utils/utils";
+import { dashUuid } from "@/utils/utils";
 import { format } from "date-fns"
-
-const baseDir = path.resolve(config.server.basePath);
-const dataDir = path.join(baseDir, 'data');
 
 const controls = [
   "op", "deop",
@@ -90,7 +87,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   switch (control) {
     case "op":
     case "deop":
-      const opsPath = path.join(dataDir, 'ops.json');
+      const opsPath = path.join(config.server.dataPath, 'ops.json');
 
       try {
         const data = JSON.parse(fs.readFileSync(opsPath, "utf-8"));
@@ -138,7 +135,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       }
     case "ban":
     case "pardon":
-      const bannedPlayersPath = path.join(dataDir, 'banned-players.json');
+      const bannedPlayersPath = path.join(config.server.dataPath, 'banned-players.json');
 
       try {
         const data = JSON.parse(fs.readFileSync(bannedPlayersPath, "utf-8"));
@@ -201,7 +198,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       })
     case "whitelist add":
     case "whitelist remove":
-      const whitelistPath = path.join(dataDir, 'whitelist.json');
+      const whitelistPath = path.join(config.server.dataPath, 'whitelist.json');
 
       try {
         const data = JSON.parse(fs.readFileSync(whitelistPath, "utf-8"));

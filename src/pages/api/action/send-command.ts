@@ -2,12 +2,8 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/pages/api/auth/[...nextauth]"
 import { spawnSync } from "child_process";
-import path from "path";
 import { NodeSignals } from "@/types/Node";
 import { config, isServerOnline } from "@/utils/serverside";
-
-const baseDir = path.resolve(config.server.basePath);
-const dataDir = path.join(baseDir, 'data');
 
 export type SendCommandProps = {
   command: string;
@@ -49,7 +45,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const commandArgs = command.split(" ");
   const result = spawnSync(config.dockerPath, ['compose', 'exec', 'mc', 'rcon-cli', ...commandArgs], {
-    cwd: baseDir,
+    cwd: config.server.basePath,
     encoding: 'utf-8'
   });
 

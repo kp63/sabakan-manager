@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { FullQueryResponse, JavaStatusResponse, queryFull, QueryOptions, status } from "minecraft-server-util";
 import { isPlayer, Player } from "@/types/Player";
-import { Simulate } from "react-dom/test-utils";
 import { config, getServerInspect, ServerInspectReturn } from "@/utils/serverside";
 
 const options: QueryOptions = {

@@ -23,6 +23,7 @@ export const configFilePath = fs.realpathSync(path.resolve(`${rootDir}/config.ym
 
 const loadConfig = (): Config => {
   let data: any = {};
+
   try {
     const loaded = yaml.load(fs.readFileSync(configFilePath, "utf-8"));
     if (typeof loaded === "object") {
@@ -52,6 +53,10 @@ const loadConfig = (): Config => {
 
   return {
     panelName: configLoader.string(data["panel-name"]) ?? "Sabakan Manager",
+    app: {
+      rootDir,
+      configFilePath
+    },
     server: {
       type: "docker", // configLoader.enum(data?.server?.type, ["docker", "screen", "systemd"]),
       basePath: serverBasePath,

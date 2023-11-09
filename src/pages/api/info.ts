@@ -1,25 +1,22 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import fs from "fs";
-import _path from "path";
 import ServerProperties from "@/types/ServerProperties";
 import {
   BannedIP,
   BannedPlayer, ConfigPlayer,
   isBannedIPObjectList,
   isBannedPlayerObjectList, isConfigPlayerList,
-  isPlayerList,
-  Player
 } from "@/types/Player";
 import {
   getServerBukkitConfig,
   getServerProperties,
-  parseIniFile,
   config,
   parseJsonFile,
   parseYamlFile
 } from "@/utils/serverside";
 import ServerBukkitConfig from "@/types/ServerBukkitConfig";
 import ServerSpigotConfig from "@/types/ServerSpigotConfig";
+import os from "os";
 
 export type ServerInfoResponse = {
   properties: Partial<ServerProperties> | null;
@@ -36,25 +33,29 @@ export type ServerInfoErrorResponse = {
   message: 'Server not found.'
 }
 
-const baseDir = _path.resolve(config.server.basePath);
-const dataDir = _path.join(baseDir, 'data');
-
 const handler = async (req: NextApiRequest, res: NextApiResponse<ServerInfoResponse | ServerInfoErrorResponse>) => {
-  if (!fs.existsSync(`${dataDir}/server.properties`)) {
-    res.status(404).json({
+  if (!fs.existsSync(`${config.server.dataPath}/server.properties`)) {
+    if (process.env.DEBUG) {
+      return res.status(404).json({
+        message: 'Server not found.',
+        details: `File "${config.server.dataPath}/server.properties" not found`,
+        runner: os.userInfo().username,
+      })
+    }
+    return res.status(404).json({
       message: 'Server not found.',
     })
   }
 
-  const properties = getServerProperties(dataDir);
+  const properties = getServerProperties(config.server.dataPath);
 
-  const ops = parseJsonFile(`${dataDir}/ops.json`);
-  const bannedPlayers = parseJsonFile(`${dataDir}/banned-players.json`);
-  const bannedIps = parseJsonFile(`${dataDir}/banned-ips.json`);
-  const whitelist = parseJsonFile(`${dataDir}/whitelist.json`);
+  const ops = parseJsonFile(`${config.server.dataPath}/ops.json`);
+  const bannedPlayers = parseJsonFile(`${config.server.dataPath}/banned-players.json`);
+  const bannedIps = parseJsonFile(`${config.server.dataPath}/banned-ips.json`);
+  const whitelist = parseJsonFile(`${config.server.dataPath}/whitelist.json`);
 
-  const bukkit = getServerBukkitConfig(dataDir);
-  const spigot = parseYamlFile(`${dataDir}/spigot.yml`);
+  const bukkit = getServerBukkitConfig(config.server.dataPath);
+  const spigot = parseYamlFile(`${config.server.dataPath}/spigot.yml`);
 
   res.status(200).json({
     properties,
@@ -66,8 +67,5 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ServerInfoRespo
     spigot,
   })
 }
-
-const readFileSync = (path: string, fallback: any = null) =>
-  fs.existsSync(path) ? fs.readFileSync(path, 'utf-8') : fallback
 
 export default handler

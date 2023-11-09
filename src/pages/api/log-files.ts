@@ -1,14 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "./auth/[...nextauth]"
-
-import fs from 'fs'
-import path from 'path'
 import { config } from "@/utils/serverside";
-
-const baseDir = path.resolve(config.server.basePath);
-const dataDir = path.join(baseDir, 'data');
-const logsDir = path.join(dataDir, 'logs')
+import fs from "fs";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getServerSession(req, res, authOptions)
@@ -19,7 +13,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     })
   }
 
-  const files = fs.readdirSync(logsDir);
+  const files = fs.readdirSync(`${config.server.dataPath}/logs`);
   files.reverse();
 
   res.json({

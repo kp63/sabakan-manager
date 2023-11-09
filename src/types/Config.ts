@@ -1,5 +1,9 @@
 export default interface Config {
   panelName?: string;
+  app: {
+    rootDir: string;
+    configFilePath: string;
+  }
   server: {
     type: 'docker' //| 'screen' | 'systemd'
     basePath: string;
