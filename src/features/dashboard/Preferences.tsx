@@ -69,23 +69,29 @@ const Preferences = () => {
 const key = "placebo-security";
 
 const ShowDockerComposeConfig = () => {
-  const { data, error } = useSWR<string>("/api/get-raw-file/docker-compose.yml", textFetcher);
+  const { data, error } = useSWR("/api/get-raw-file/docker-compose.yml", fetcher);
 
-  if (typeof data !== "string" || error) {
+  if (error || !data?.data) {
     return <React.Fragment />
   }
 
-  return <EditorModal filename="Docker Compose 構成ファイル (docker-compose.yml)" language="yaml" defaultValue={data} />
+  const decrypted = decrypt(data?.data);
+
+  if (!decrypted) {
+    return <React.Fragment />
+  }
+
+  return <EditorModal filename="Docker Compose 構成ファイル (docker-compose.yml)" language="yaml" defaultValue={decrypted} />
 }
 
 const ShowServerProperties = () => {
   const { data, error } = useSWR("/api/get-raw-file/server.properties", fetcher);
 
-  if (error || !data.data) {
+  if (error || !data?.data) {
     return <React.Fragment />
   }
 
-  const decrypted = decrypt(data.data);
+  const decrypted = decrypt(data?.data);
 
   if (!decrypted) {
     return <React.Fragment />
@@ -97,11 +103,11 @@ const ShowServerProperties = () => {
 const ShowBukkitConfig = () => {
   const { data, error } = useSWR("/api/get-raw-file/bukkit.yml", fetcher);
 
-  if (error || !data.data) {
+  if (error || !data?.data) {
     return <React.Fragment />
   }
 
-  const decrypted = decrypt(data.data);
+  const decrypted = decrypt(data?.data);
 
   if (!decrypted) {
     return <React.Fragment />
@@ -113,11 +119,11 @@ const ShowBukkitConfig = () => {
 const ShowSpigotConfig = () => {
   const { data, error } = useSWR("/api/get-raw-file/spigot.yml", fetcher);
 
-  if (error || !data.data) {
+  if (error || !data?.data) {
     return <React.Fragment />
   }
 
-  const decrypted = decrypt(data.data);
+  const decrypted = decrypt(data?.data);
 
   if (!decrypted) {
     return <React.Fragment />
