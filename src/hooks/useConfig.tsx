@@ -1,8 +1,8 @@
 import useSWR from "swr";
-import { ServerPingResponse } from "@/pages/api/ping";
+import { ServerConfigResponse } from "@/pages/api/app-config";
 
 const useConfig = () => {
-  const { data, error, ...etc } = useSWR<ServerPingResponse>('/api/get-config');
+  const { data, error, ...etc } = useSWR<ServerConfigResponse>('/api/app-config');
 
   return {
     isLoaded: data && !error,

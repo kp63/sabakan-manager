@@ -27,13 +27,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<SignalResponse>
   }
 
   const inspect = getServerInspect();
-  // if (!inspect) {
-  //   return res.status(500).json({
-  //     message: "Dockerに接続できません"
-  //   })
-  // }
+  if (!inspect) {
+    return res.status(500).json({
+      message: "Dockerに接続できません"
+    })
+  }
 
-  const { state, health } = inspect ?? {};
+  const { state, health } = inspect;
 
   if (state === "restarting" || (state === "running" && health === "starting")) {
     return res.status(409).json({

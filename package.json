@@ -38,6 +38,7 @@
     "react-dom": "18.2.0",
     "react-hook-form": "^7.48.2",
     "react-hot-toast": "^2.4.1",
+    "react-string-replace": "^1.1.1",
     "swr": "^2.2.4",
     "typescript": "^5.2.2"
   },

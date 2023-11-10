@@ -5,6 +5,7 @@ import serverUtils from "@/utils/serverUtils";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
 import usePing from "@/hooks/usePing";
+import useConfig from "@/hooks/useConfig";
 
 const handleKeydown = (event: Event) => {
   const e = event as any as KeyboardEvent<HTMLBodyElement>;
@@ -21,6 +22,7 @@ const handleKeydown = (event: Event) => {
 
 const SendCommandForm = () => {
   const { data: ping } = usePing();
+  const { config } = useConfig();
   const { register, handleSubmit, setValue, getValues } = useForm();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -35,6 +37,7 @@ const SendCommandForm = () => {
     }
   }, [ping])
 
+  if (!config?.features.sendCommand) return <Fragment />;
   if (!ping) return <Fragment />
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {

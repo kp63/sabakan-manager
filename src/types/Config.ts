@@ -4,6 +4,9 @@ export default interface Config {
     rootDir: string;
     configFilePath: string;
   }
+  features: {
+    sendCommand: boolean;
+  }
   server: {
     type: 'docker' //| 'screen' | 'systemd'
     basePath: string;

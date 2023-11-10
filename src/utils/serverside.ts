@@ -57,6 +57,9 @@ const loadConfig = (): Config => {
       rootDir,
       configFilePath
     },
+    features: {
+      sendCommand: configLoader.boolean(data?.features['send-command']),
+    },
     server: {
       type: "docker", // configLoader.enum(data?.server?.type, ["docker", "screen", "systemd"]),
       basePath: serverBasePath,
@@ -254,7 +257,7 @@ export type ServerInspectReturn = {
 export const getServerInspect = (): ServerInspectReturn | null => {
   try {
     const inspect =
-      spawnSync(config.dockerPath, ["inspect", "--format={{.State.Status}}:{{.State.Health.Status}}", "main-mc-1"])
+      spawnSync(config.dockerPath, ["inspect", "--format={{.State.Status}}:{{.State.Health.Status}}", `${path.basename(config.server.basePath)}-${config.server.serviceName}-1`])
         .stdout
         .toString()
         .trim()

@@ -1,5 +1,6 @@
 import React, { forwardRef, ReactNode, useMemo } from "react";
 import { CheckCircle, XCircle } from "react-bootstrap-icons";
+import reactStringReplace from "react-string-replace";
 import { twMerge } from "tailwind-merge";
 
 const PropertiesHighlighter = (lines: string[]) => {
@@ -24,12 +25,11 @@ const PropertiesHighlighter = (lines: string[]) => {
     const [, key, value] = matches;
 
     const formattedValue = (() => {
-      console.log(key);
       if (key.match(/^(rcon\.[a-zA-Z0-9]+|[a-zA-Z0-9]*password[a-zA-Z0-9]*)$/g)) {
         return <span className="text-gray-400 dark:text-gray-500 text-xs">(hidden)</span>;
       }
 
-      if (value.match(/^\d+$/)) {
+      if (value.match(/^[\d.]+$/)) {
         return <span className="text-blue-700 dark:text-blue-400">{value}</span>;
       }
 
@@ -76,6 +76,21 @@ const YamlHighlighter = (lines: string[]) => {
     const matches = line.match(/^(\s*)([a-zA-Z0-9\-_.]+)(\s*:\s*)(.*)$/);
 
     if (!matches) {
+      const matches = line.match(/^(\s*)(-)(\s*)(.*)$/);
+
+      if (matches) {
+        const [, indent, dash, spaces, value] = matches;
+        result.push(<>
+          <span className="text-sky-700 dark:text-sky-500">{indent}</span>
+          <span className="text-gray-500 dark:text-gray-400">{dash}</span>
+          <span>{spaces}</span>
+          {reactStringReplace(value, '********', (match, i) => (
+            <span className="text-gray-400 dark:text-gray-500 text-xs">(hidden)</span>
+          ))}
+        </>)
+        continue;
+      }
+
       result.push(line);
       continue;
     }
@@ -83,7 +98,20 @@ const YamlHighlighter = (lines: string[]) => {
     const [, indent, key, separator, value] = matches;
 
     const formattedValue = (() => {
-      if (value.match(/^\d+$/)) {
+      if ([
+        'RCON_PORT',
+        'RCON_PASSWORD',
+        'DB_PASSWORD',
+        'MYSQL_PASSWORD',
+        'MYSQL_ROOT_PASSWORD',
+        'POSTGRES_PASSWORD',
+        'PASSWORD',
+        'CF_API_KEY',
+      ].includes(key)) {
+        return <span className="text-gray-400 dark:text-gray-500 text-xs">(hidden)</span>;
+      }
+
+      if (value.match(/^[\d.]+$/)) {
         return <span className="text-blue-700 dark:text-blue-400">{value}</span>;
       }
 
@@ -98,7 +126,11 @@ const YamlHighlighter = (lines: string[]) => {
         return <span className={`${value.toLowerCase() === "true" ? "text-emerald-500 dark:text-emerald-400" : "text-red-600 dark:text-red-400"} inline-flex items-center gap-0.5`}>{value}{value.toLowerCase() === "true" ? <CheckCircle /> : <XCircle />}</span>;
       }
 
-      return <span className="text-gray-800 dark:text-gray-300">{value}</span>;
+      return reactStringReplace(value, '********', (match, i) => (
+        <span className="text-gray-800 dark:text-gray-300">{match}</span>
+      ));
+
+      // return <span className="text-gray-800 dark:text-gray-300">{value}</span>;
     })()
 
     result.push(<>
