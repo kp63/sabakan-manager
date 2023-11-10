@@ -6,7 +6,7 @@ import { EraserFill, FileEarmark, FileEarmarkCode, Gear, XCircle, XLg } from "re
 import Tooltip from "@/components/Tooltip";
 import Modal from "@/components/Modal";
 import useSWR from "swr";
-import fetcher, { textFetcher } from "@/utils/fetcher";
+import fetcher from "@/utils/fetcher";
 import { Close } from "@radix-ui/react-dialog";
 import AES from 'crypto-js/aes';
 import encUtf8 from 'crypto-js/enc-utf8';
@@ -21,6 +21,13 @@ const gamemodes = {
   spectator: "スペクテーター"
 }
 
+const difficulties = {
+  peaceful: <span className="text-green-600 dark:text-green-400">ピースフル</span>,
+  easy: <span className="text-green-600 dark:text-green-400">イージー</span>,
+  normal: <span className="text-yellow-600 dark:text-yellow-400">ノーマル</span>,
+  hard: <span className="text-red-600 dark:text-red-400">ハード</span>,
+}
+
 const Preferences = () => {
   const { data: info } = useServerInfo();
 
@@ -30,6 +37,11 @@ const Preferences = () => {
     // @ts-ignore
     ? gamemodes[String(info.properties.gamemode)]
     : info.properties.gamemode
+
+  const difficulty = typeof info.properties.difficulty === "string" && Object.keys(difficulties).includes(info.properties.difficulty)
+    // @ts-ignore
+    ? difficulties[String(info.properties.difficulty)]
+    : info.properties.difficulty
 
   const bool = (value: any) =>
     typeof value === "boolean"
@@ -50,8 +62,9 @@ const Preferences = () => {
               <EraserFill className="text-red-400" />
             </Tooltip>
           )}</ListItem>
+          <ListItem>難易度: {difficulty}</ListItem>
           <ListItem>スポーン保護: <span className="text-orange-400">{info.properties.spawnProtection}</span></ListItem>
-          <ListItem>コマンドブロック: {bool(info.properties.pvp)}</ListItem>
+          <ListItem>コマンドブロック: {bool(info.properties.enableCommandBlock)}</ListItem>
         </List>
       </BoxGroup>
       <BoxGroup className="mt-3" title="Show Raw Files" icon={FileEarmark}>
