@@ -18,7 +18,11 @@ module.exports = {
         popupFadeIn: {
           '0%': { transform: 'scale(.95)', opacity: .5 },
           '100%': { transform: 'scale(1)', opacity: 1 },
-        }
+        },
+        menuFadeIn: {
+          '0%': { position: 'relative', top: -20, left: -24, transform: 'scale(.8)', opacity: 0 },
+          '100%': { transform: 'scale(1)', position: 'relative', top: 0, left: 0, opacity: 1 },
+        },
       },
 
       colors: {

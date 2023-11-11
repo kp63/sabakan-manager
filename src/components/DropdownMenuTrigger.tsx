@@ -48,8 +48,8 @@ const ContextMenuTrigger = ({ children, className, items }: Props) => {
     <DropdownMenu.Root>
       <DropdownMenu.Trigger className={className}>{children}</DropdownMenu.Trigger>
       <DropdownMenu.Portal>
-        <DropdownMenu.Content align="start" alignOffset={-6} onContextMenu={handleContextMenu} className={clsx(
-          "flex flex-col text-left select-none focus:outline-none text-sm z-45",
+        <DropdownMenu.Content align="start" side="right" alignOffset={-6} onContextMenu={handleContextMenu} className={clsx(
+          "flex flex-col text-left select-none focus:outline-none text-sm z-45 animate-[menuFadeIn_.12s_ease-out]",
           "py-1 m-2",
           "bg-white shadow-lg ring-1 ring-black/20",
           "dark:bg-gray-700 dark:shadow-xl rounded w-56",

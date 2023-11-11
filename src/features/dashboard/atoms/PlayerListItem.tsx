@@ -74,22 +74,22 @@ const PlayerListItem = ({ player: _player }: { player: Player | ConfigPlayer }) 
   return (
     <>
       <ListItem className="flex flex-col items-stretch p-0">
-        <DropdownMenuTrigger
-          className="flex items-center px-2.5 py-1.5 gap-1.5 border-b last:border-b-0 border-b-gray-200 dark:border-b-gray-600"
-          items={menuItems}
-        >
-          <div className="flex items-center gap-1.5">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <Image
-              unoptimized
-              className="rounded pointer-events-none bg-gray-300 dark:bg-zinc-800"
-              src={getAvatar(32) ?? ""}
-              width={32} height={32}
-              alt={player.name}
-            />
+          <div className="flex items-center px-2.5 py-1.5 gap-1.5">
+            <DropdownMenuTrigger
+              className="flex items-center"
+              items={menuItems}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <Image
+                unoptimized
+                className="rounded pointer-events-none bg-gray-300 dark:bg-zinc-800"
+                src={getAvatar(32) ?? ""}
+                width={32} height={32}
+                alt={player.name}
+              />
+            </DropdownMenuTrigger>
             <span className="cursor-pointer" onClick={() => copyPlayerName(player.name)}>{player.name}</span>
           </div>
-        </DropdownMenuTrigger>
       </ListItem>
       {isOpenKickModal && (
         <Modal forceMount onClose={() => setIsOpenKickModal(false)}>
